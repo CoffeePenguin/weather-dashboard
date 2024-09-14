@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const WEATHER_API_URL = 'https://weather.tsukumijima.net/api/forecast/city/130010'; // 東京のデータ
+const WEATHER_API_URL = 'https://weather.tsukumijima.net/api/forecast/city/110010'; // 東京のデータ
 
 let lastMotionDetected: Date | null = null;
 

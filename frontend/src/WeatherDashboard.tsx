@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Thermometer, Droplets, Sun, Cloud, Calendar } from 'lucide-react';
 
+// WeatherData interface definition
 interface WeatherData {
   date: string;
   dateLabel: string;
@@ -24,7 +25,7 @@ interface WeatherData {
 }
 
 const WeatherCard: React.FC<{ weather: WeatherData; title: string }> = ({ weather, title }) => (
-  <div className="bg-white p-6 rounded-xl shadow-md">
+  <div className="bg-gray-800 p-6 rounded-xl shadow-md text-white">
     <h2 className="text-2xl font-bold mb-4 flex items-center">
       <Calendar className="mr-2" />{title}
     </h2>
@@ -32,7 +33,7 @@ const WeatherCard: React.FC<{ weather: WeatherData; title: string }> = ({ weathe
       {weather.image && weather.image.url ? (
         <img src={weather.image.url} alt={weather.image.title || '天気アイコン'} className="w-16 h-16 mr-4" />
       ) : (
-        <Cloud className="w-16 h-16 mr-4 text-gray-400" /> // デフォルトのアイコン
+        <Cloud className="w-16 h-16 mr-4 text-gray-400" />
       )}
       <div>
         <p className="text-xl font-semibold">{weather.telop || '情報なし'}</p>
@@ -41,14 +42,14 @@ const WeatherCard: React.FC<{ weather: WeatherData; title: string }> = ({ weathe
     </div>
     <div className="grid grid-cols-2 gap-4 mb-4">
       <div className="flex items-center">
-        <Thermometer className="w-6 h-6 text-red-500 mr-2" />
+        <Thermometer className="w-6 h-6 text-red-400 mr-2" />
         <div>
           <p className="font-semibold">最高気温</p>
           <p>{weather.temperature?.max || 'N/A'}°C</p>
         </div>
       </div>
       <div className="flex items-center">
-        <Thermometer className="w-6 h-6 text-blue-500 mr-2" />
+        <Thermometer className="w-6 h-6 text-blue-400 mr-2" />
         <div>
           <p className="font-semibold">最低気温</p>
           <p>{weather.temperature?.min || 'N/A'}°C</p>
@@ -114,25 +115,27 @@ const WeatherDashboard: React.FC = () => {
   }
 
   if (!todayWeather || !tomorrowWeather) {
-    return <div className="text-2xl">気象データを読み込んでいます...</div>;
+    return <div className="text-2xl text-white">気象データを読み込んでいます...</div>;
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">東京の天気予報</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <WeatherCard weather={todayWeather} title="今日の天気" />
-        <WeatherCard weather={tomorrowWeather} title="明日の天気" />
+    <div className="min-h-screen bg-black text-white p-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-center">東京の天気予報</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <WeatherCard weather={todayWeather} title="今日の天気" />
+          <WeatherCard weather={tomorrowWeather} title="明日の天気" />
+        </div>
+        <div className="mt-6 bg-gray-800 p-6 rounded-xl shadow-md">
+          <h2 className="text-2xl font-bold mb-4">天気の詳細</h2>
+          <p>{todayWeather.description || '詳細情報がありません。'}</p>
+        </div>
+        {lastMotion && (
+          <p className="mt-4 text-sm text-gray-400 text-center">
+            最後の動き検知: {new Date(lastMotion).toLocaleString()}
+          </p>
+        )}
       </div>
-      <div className="mt-6 bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold mb-4">天気の詳細</h2>
-        <p>{todayWeather.description || '詳細情報がありません。'}</p>
-      </div>
-      {lastMotion && (
-        <p className="mt-4 text-sm text-gray-600 text-center">
-          最後の動き検知: {new Date(lastMotion).toLocaleString()}
-        </p>
-      )}
     </div>
   );
 };
